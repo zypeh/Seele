@@ -1,0 +1,29 @@
+name:         seele-lib
+version:      0.1.0
+author:       zypeh
+maintainer:   zypeh.geek@gmail.com
+github:       zypeh/Seele
+
+library:
+  source-dirs:  src
+  dependencies:
+  - base >= 4.7 && < 5
+  - aeson
+  - containers
+  - exceptions
+  - http-client
+  - servant
+  - servant-client
+  - servant-server
+  - stm
+  - text
+  - time
+  - transformers >= 0.4
+  - uuid
+  - wai
+  - warp
+  exposed-modules:
+  - Import
+  - Seele
+  - Seele.Common
+  - Seele.Types

@@ -1,0 +1,5 @@
+flags: {}
+packages:
+- './seele-frontend'
+- './seele-lib'
+resolver: lts-11.2
