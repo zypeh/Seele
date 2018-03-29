@@ -10,8 +10,13 @@ import Data.Aeson
 import Import
 import Servant.API
 
+type SeeleAPI = UsersAPI
+
 -- Service API
 type UsersAPI =
+    -- user test
+    "api" :> "users" :> "troll" :> ReqBody '[JSON] LoginReq :> Post '[JSON] AuthToken
+    :<|>
     -- signin
     "api" :> "users" :> "signin" :> ReqBody '[JSON] LoginReq :> Post '[JSON] SigninToken
     :<|>
@@ -21,6 +26,12 @@ type UsersAPI =
 newtype SigninToken =
     SigninToken Text
     deriving (ToJSON, FromJSON, FromHttpApiData, ToHttpApiData, Ord, Eq)
+
+data AuthToken = AuthToken {
+    token :: String
+    } deriving (Generic)
+
+instance ToJSON AuthToken
 
 data LoginReq = LoginReq {
     userid :: Text

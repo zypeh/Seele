@@ -1,79 +1,32 @@
-{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE TypeOperators #-}
-{-# LANGUAGE ScopedTypeVariables #-}
 
--- | This module is a public API implementation
+-- Reverse proxying HTTP requests
 module Main where
 
-import Control.Arrow hiding (app)
-import Control.Exception (catch)
-import Control.Lens
-import Data.Maybe (fromMaybe)
-import Data.Monoid
-import Data.String.Class (fromStrictByteString, toString)
-import Data.Text (Text)
-import qualified Data.Text as T
-import qualified Network.HTTP.Client as HC
-import Network.HTTP.Client
-       (HttpException(HttpExceptionRequest),
-        HttpExceptionContent(StatusCodeException))
-import Network.HTTP.Types (status404, status500)
+import Control.Exception         (SomeException)
+import Network.HTTP.ReverseProxy
+import Network.HTTP.Client       (Manager, newManager, defaultManagerSettings)
+import Network.HTTP.Types        (status404, status500)
 import Network.Wai
-import Network.Wai.Handler.Warp hiding (Manager)
-import qualified Network.Wreq as W
+import Network.Wai.Handler.Warp
 
-app :: HC.Manager -> Application
-app mgr req respond =
-  case pathInfo req of
-    ("api":"users":_) -> microservice "http://localhost:8082/"
-    ("api":"albooms":_) -> microservice "http://localhost:8083/"
-    _ ->
-      respond
-        (responseLBS status404 [] ",,,(o,o),,,\n ';:`-':;' \n   -\"-\"-   \n")
-  where
-    microservice = microserviceProxy mgr req respond
+app :: Manager -> Application
+app = waiProxyTo forwardRequest onException
 
-getReqParams :: Request -> [(Text, Text)]
-getReqParams req =
-  map
-    (fromStrictByteString *** fromStrictByteString . fromMaybe "")
-    (queryString req)
+-- Inspects the request, and then gets to decide what to do with it.
+forwardRequest :: Request -> IO WaiProxyResponse
+forwardRequest incomingReq = case pathInfo incomingReq of
+    ("api" : "users" : _ ) -> pure (WPRProxyDest $ ProxyDest "127.0.0.1" 8082)
+    _ -> pure (WPRResponse (responseLBS status404 [] "¯\\_(ツ)_/¯ API not found. \n"))
 
-microserviceProxy ::
-     forall b.
-     HC.Manager
-  -> Request
-  -> (Network.Wai.Response -> IO b)
-  -> Text
-  -> IO b
-microserviceProxy mgr req respond basePath = do
-  let opts =
-        W.defaults & W.manager .~ Right mgr & W.headers .~ requestHeaders req &
-        W.params .~
-        getReqParams req
-      url = basePath <> T.intercalate "/" (pathInfo req)
-  tryProxying opts url `catch` onErr
-  where
-    tryProxying opts url = do
-      r <-
-        case requestMethod req of
-          "GET" -> W.getWith opts (toString url)
-          "POST" -> requestBody req >>= W.postWith opts (toString url)
-      respond
-        (responseLBS
-           (r ^. W.responseStatus)
-           (r ^. W.responseHeaders)
-           (r ^. W.responseBody))
-    onErr :: HttpException -> IO b
-    onErr (HttpExceptionRequest req (StatusCodeException rsp _)) =
-      respond
-        (responseLBS (rsp ^. W.responseStatus) (rsp ^. W.responseHeaders) "")
-    onErr e = do
-      putStrLn ("Internal error: " ++ show e)
-      respond (responseLBS status500 [] "Internal server error")
+-- Error handling
+onException :: SomeException -> Application
+onException exc _ sendResponse = sendResponse $ responseLBS
+    status500
+    [("content-type", "text/plain")]
+    "Internal Service Error"
 
 main :: IO ()
 main = do
-  mgr <- HC.newManager HC.defaultManagerSettings
-  run 8081 (app mgr)
+    manager <- newManager defaultManagerSettings
+    run 8081 (app manager)

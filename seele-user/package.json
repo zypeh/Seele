@@ -1,0 +1,18 @@
+{
+  "name": "seele-user",
+  "version": "0.1.1",
+  "description": "facebook login utility for seele",
+  "main": "index.js",
+  "repository": "git@github.com:zypeh/Seele.git",
+  "author": "zypeh <zypeh.geek@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "koa": "^2.5.0",
+    "koa-better-body": "^3.0.4",
+    "koa-convert": "^1.2.0"
+  }
+}
