@@ -1,15 +1,24 @@
 const Koa = require('koa');
+const Router = require('koa-router');
+
 const convert = require('koa-convert');
-const body = require('koa-better-body');
+const passport = require('koa-passport');
+const middleware = require('./middleware');
+const jwt = require('./jwt');
 
-app = new Koa();
+const app = new Koa();
+const router = new Router();
 
-app.use(convert(body()))
-app.use(async (ctx, next) => {
-    console.log(ctx.request);
-    console.log(ctx.request.fields);
-    ctx.status = 404;
-    // ctx.body = { token: 'yes' }
-});
+router.get('/auth/fb', passport.authenticate('facebook'));
+router.get('/auth/fb_cb',
+    passport.authenticate('facebook', { session: false }),
+    async ctx => {
+        const [token, refreshToken] = await jwt.assignToken(ctx.state.user);
+        ctx.redirect(`http://localhost:4000?token=${token}&refreshToken=${refreshToken}`);
+    }
+)
 
-app.listen(8082);
+app.use(middleware());
+app.use(router.routes());
+app.use(router.allowedMethods());
+app.listen(parseInt(process.env.PORT, 10) || 8082);
