@@ -1,0 +1,38 @@
+{
+    "name": "seele-monolith",
+    "version": "0.1.0",
+    "description": "monolith app",
+    "main": "index.js",
+    "author": "zypeh <zypeh.geek@gmail.com>",
+    "license": "ISC",
+    "private": true,
+    "engines": {
+        "node": ">=9.5.0"
+    },
+    "scripts": {
+        "build": "tsc",
+        "prestart": "yarn build",
+        "start": "node ./dist",
+        "dev": "nodemon"
+    },
+    "devDependencies": {
+        "@types/node": "^9.6.2",
+        "nodemon": "^1.17.3",
+        "prettier": "^1.11.1",
+        "tslint": "^5.9.1",
+        "tslint-config-airbnb": "^5.8.0",
+        "tslint-config-prettier": "^1.10.0",
+        "typescript": "^2.8.1"
+    },
+    "dependencies": {
+        "fastify": "^1.2.1",
+        "fastify-graphql": "^4.0.0",
+        "fastify-helmet": "^1.0.3",
+        "graphql": "^0.13.2",
+        "graphql-tools": "^2.23.1",
+        "jsonwebtoken": "^8.2.0",
+        "pg": "^7.4.1",
+        "pg-hstore": "^2.3.2",
+        "sequelize": "^4.37.5"
+    }
+}
