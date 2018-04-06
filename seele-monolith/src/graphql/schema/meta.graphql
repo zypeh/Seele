@@ -1,0 +1,9 @@
+type Error {
+    success: Boolean!
+    info: String!
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}

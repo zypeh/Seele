@@ -10,7 +10,7 @@
         "node": ">=9.5.0"
     },
     "scripts": {
-        "build": "tsc",
+        "build": "mkdir -p ./dist/graphql/schema && cp ./src/graphql/schema/*.graphql ./dist/graphql/schema && tsc",
         "prestart": "yarn build",
         "start": "node ./dist",
         "dev": "nodemon"
@@ -33,6 +33,7 @@
         "jsonwebtoken": "^8.2.0",
         "pg": "^7.4.1",
         "pg-hstore": "^2.3.2",
-        "sequelize": "^4.37.5"
+        "sequelize": "^4.37.5",
+        "shortid": "^2.2.8"
     }
 }

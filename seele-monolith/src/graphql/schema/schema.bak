@@ -1,14 +1,25 @@
-export default `
-    scalar Date
+import { mergeSchemas } from 'graphql-tools'
 
-    type User {
+export default mergeSchemas({
+    schemas: []
+})
+
+const a = `
+    type Error 
+    type UserReponse {
+        success: Boolean
+        info: String
+
         name: String
         username: String
         avatar: String
         gender: String
     }
-    
-    type UserOwnerView {
+
+    type UserOwnerResponse {
+        success: Boolean
+        info: String
+
         name: String
         username: String
         email: String
@@ -17,7 +28,10 @@ export default `
         phone: String
     }
 
-    type Unit {
+    type UnitResponse {
+        success: Boolean
+        info: String
+
         unitId: String
         name: String
         type: String
@@ -55,8 +69,16 @@ export default `
         refreshToken: String!
     }
 
+    enum AuthResponse {
+        AuthPayload
+
+    }
     type Query {
-        unit(unitId: String!): Unit
+        unit(unitId: String!): UnitResponse
+        unitDashboard(
+            unitId: String!,
+            token: String!
+        ): UnitOwnerResponse
     }
 
     type Mutation {
@@ -84,7 +106,15 @@ export default `
             addr_country: String
         ): Unit
 
-        bookUnit(id: String!, start: Date, end: Date):  Boolean!
+        listUnit(
+            unitId: String!,
+            token: String!
+        ):  Boolean!
+
+        publishUnit(
+            bookId: Int!,
+            token: String!
+        ): Boolean!
 
     }
 

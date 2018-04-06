@@ -1,7 +1,9 @@
+import shortid from 'shortid'
+
 export default (sequelize, DataTypes) => {
     const Unit = sequelize.define('Unit', {
         id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, unique: true },
-        unitId: { type: DataTypes.STRING(32), unique: true },
+        unitId: { type: DataTypes.STRING(32), defaultValue: () => shortid.generate(), unique: true },
         name: { type: DataTypes.STRING(100) },
         type: { type: DataTypes.STRING(64) },
 
