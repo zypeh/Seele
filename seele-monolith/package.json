@@ -10,7 +10,7 @@
         "node": ">=9.5.0"
     },
     "scripts": {
-        "build": "mkdir -p ./dist/graphql/schema && cp ./src/graphql/schema/*.graphql ./dist/graphql/schema && tsc",
+        "build": "mkdir -p ./dist/graphql/schema && cp ./src/graphql/schema.graphql ./dist/graphql && tsc",
         "prestart": "yarn build",
         "start": "node ./dist",
         "dev": "nodemon"

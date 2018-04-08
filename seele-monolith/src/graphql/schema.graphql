@@ -1,0 +1,126 @@
+type Error {
+    success: Boolean!
+    info: String!
+}
+
+type User {
+    name: String
+    username: String
+    avatar: String
+    gender: String
+}
+
+type UserDashboard {
+    name: String
+    username: String
+    avatar: String
+    gender: String
+
+    phone: String
+    email: String
+}
+
+type Unit {
+    unitId: String
+    name: String
+    type: String
+    description: String
+
+    currency: String
+    pricing: Float
+
+    addr_zip: String
+    addr_street: String
+    addr_city: String
+    addr_state: String
+    addr_country: String
+
+    published: Boolean
+}
+
+"JWT assigned by bumiProp API server"
+type AuthPayload {
+    "JsonWebToken that lasts 7 days"
+    token: String!
+    "JsonWebToken that lasts 3 weeks"
+    refreshToken: String!
+}
+
+enum UserResponse {
+    Error
+    User
+}
+
+enum UserDashboardResponse {
+    Error
+    UserDashboard
+}
+
+enum AuthResponse {
+    Error
+    AuthPayload
+}
+
+enum UnitResponse {
+    Error
+    Unit
+}
+
+enum UnitAPIResponse {
+    Error
+    Boolean
+}
+
+type Query {
+    unit(unitId: String!): UnitResponse
+    unitDashboard(
+        unitId: String!
+        token: String!
+    ): UnitResponse
+}
+
+type Mutation {
+    "Register an user account, will send an email to the mailbox. User login via the link provided from the email. (The link lasts 7 days, just like the AuthPayload's token JsonWebToken)"
+    register(
+        username: String!
+        email: String!
+    ): Boolean!
+    "Login using the username, will send an email to the mailbox."
+    login(
+        username: String!
+    ): Boolean!
+    refreshToken(refreshToken: String!): AuthResponse
+    createUnit(
+        name: String!
+        type: String!
+        token: String!
+    ): UnitResponse
+    
+    "Update unit preference and descriptions"
+    updateUnit(
+        token: String!
+        unitId: String!
+        name: String
+        description: String
+        currency: String
+        pricing: Float
+        addr_zip: String
+        addr_street: String
+        addr_city: String
+        addr_state: String
+        addr_country: String
+    ): UnitResponse
+    listUnit(
+        unitId: String!
+        token: String!
+    ): UnitAPIResponse
+    publishUnit(
+        bookId: String!
+        token: String!
+    ): UnitAPIResponse
+}
+
+schema {
+    query: Query
+    mutation: Mutation
+}

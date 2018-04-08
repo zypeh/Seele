@@ -9,7 +9,6 @@ export default {
     },
 
     Mutation: {
-        /*
         register: async (_, { username, email }, {}) => true,
         login: async (_, { id }, {}) => true,
 
@@ -20,7 +19,7 @@ export default {
             else
                 return userdoc // { sucess: false, info: '...' }
         },
-        */
+
         createUnit: async (_, { name, type, token }, { db, lib }) => {
             // verify the token
             const userdoc = await lib.jwt.resolveUser(db, token)
