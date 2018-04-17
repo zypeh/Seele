@@ -113,11 +113,11 @@ type Mutation {
     listUnit(
         unitId: String!
         token: String!
-    ): UnitAPIResponse
+    ): Boolean #UnitAPIResponse
     publishUnit(
         bookId: String!
         token: String!
-    ): UnitAPIResponse
+    ): Boolean #UnitAPIResponse
 }
 
 schema {

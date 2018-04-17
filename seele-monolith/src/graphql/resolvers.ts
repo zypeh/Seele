@@ -29,6 +29,7 @@ export default {
                 return null
         },
 
+        /*
         updateUnit: async (_, payload, token, { db, lib }) => {
             const [userdoc, unitdoc] = await Promise.all([
                 await lib.jwt.resolveUser(db, payload.token),
@@ -49,6 +50,7 @@ export default {
                 return null
             }
         },
+        */
 
         listUnit: async (_, { unitId, token }, { lib, db }) => {
             const [userdoc, unitdoc] = await Promise.all([

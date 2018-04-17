@@ -1,9 +1,9 @@
-import Router from 'koa-router'
+import * as Router from 'koa-router'
 import compose from 'koa-compose'
 
-import passport from 'koa-passport'
-import FacebookStrategy from 'passport-facebook'
-import GoogleStrategy from 'passport-google-oauth20'
+import * as passport from 'koa-passport'
+import * as FacebookStrategy from 'passport-facebook'
+import * as GoogleStrategy from 'passport-google-oauth20'
 
 import { graphqlKoa, graphiqlKoa } from 'apollo-server-koa'
 import { apolloUploadKoa } from 'apollo-upload-server'
