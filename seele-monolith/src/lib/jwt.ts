@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 const SECRET = 'very_secret'
 
 export const assignToken = (userdoc) => {
-    const createToken: string = jwt.sign(
+    const token: string = jwt.sign(
         {
             user: userdoc.username,
             heartbeat: '💓'
@@ -15,7 +15,7 @@ export const assignToken = (userdoc) => {
         }
     )
 
-    const createRefreshToken: string = jwt.sign(
+    const refreshToken: string = jwt.sign(
         {
             user: userdoc.username,
             verified: userdoc.email_verified,
@@ -27,7 +27,7 @@ export const assignToken = (userdoc) => {
             expiresIn: '14d'
         }
     )
-    return [createToken, createRefreshToken]
+    return [token, refreshToken]
 }
 
 export const resolveUser = async (db, token: string): Promise<object> => {

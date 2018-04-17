@@ -1,40 +1,21 @@
-const fastify = require('fastify')()
-const helmet = require('fastify-helmet')
+import * as Koa from 'koa'
 
-import { graphqlFastify, graphiqlFastify } from 'fastify-graphql'
+import * as helmet from 'koa-helmet'
+
+import routes from './routes'
 import db from './database'
-import api from './api'
-import schema from './graphql'
-import lib from './lib'
 
-const isDev = (process.env.ENV !== 'production')
+const app = new Koa()
 
-fastify.register(helmet)
-fastify.register(graphqlFastify, {
-    prefix: '/g',
-    graphql: {
-        schema,
-        context: {
-            db,
-            lib
-        },
-        debug: isDev
-    }
-})
-
-if (isDev)
-    fastify.register(graphiqlFastify, {
-        prefix: '/giql',
-        graphiql: { endpointURL: '/g' }
-    })
+app.use(helmet())
+app.use(routes())
 
 // Serving
-const PORT = parseInt(process.env.PORT, 10) || 3000
 db.sequelize.sync().then(async () => {
     try {
-        await fastify.listen(PORT)
+        await app.listen(parseInt(process.env.PORT, 10) || 8083)
     } catch (err) {
-        fastify.log.error(err)
+        // should debug here ...
         process.exit(1)
     }
 })
