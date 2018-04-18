@@ -1,5 +1,5 @@
 import * as Router from 'koa-router'
-import compose from 'koa-compose'
+import * as compose from 'koa-compose'
 
 import * as passport from 'koa-passport'
 import * as FacebookStrategy from 'passport-facebook'
@@ -20,9 +20,9 @@ export default () => compose([router.routes(), router.allowedMethods()])
 
 const router = new Router()
 
-// Facebook Oauth2.0
-router.get('/facebook', passport.authenticate('facebook'))
-router.get('/facebook_oauth',
+/* Facebook Oauth2.0
+router.get('/auth/facebook', passport.authenticate('facebook'))
+router.get('/auth/facebook_cb',
     passport.authenticate('facebook', { session: false }),
     async (ctx) => {
         const [token, refreshToken] = await assignToken(ctx.state.user)
@@ -30,15 +30,16 @@ router.get('/facebook_oauth',
     }
 )
 
-// Google Oauth2.0
-router.get('/google', passport.authenticate('google', { scope: ['profile'] }))
-router.get('/google_oauth',
+Google Oauth2.0
+router.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }))
+router.get('/auth/google_cb',
     passport.authenticate('google', { session: false }),
     async (ctx) => {
         const [token, refreshToken] = await assignToken(ctx.state.user)
         ctx.redirect(`http://localhost:4000?token=${token}&refreshToken=${refreshToken}`)
     }
 )
+*/
 
 // GraphQL endpoint
 router.post('/g',
@@ -60,6 +61,7 @@ router.post('/g',
 if (isDev) // Only enable this route when it's development environment
     router.get('/giql', graphiqlKoa({ endpointURL: '/g' }))
 
+/*
 passport.use(
     new FacebookStrategy(
         {
@@ -89,7 +91,6 @@ passport.use(
         }
     )
 )
-
 passport.use(
     new GoogleStrategy(
         {
@@ -118,3 +119,4 @@ passport.use(
         }
     )
 )
+*/

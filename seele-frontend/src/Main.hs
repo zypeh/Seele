@@ -16,9 +16,8 @@ app = waiProxyTo forwardRequest onException
 -- Inspects the request, and then gets to decide what to do with it.
 forwardRequest :: Request -> IO WaiProxyResponse
 forwardRequest incomingReq = case pathInfo incomingReq of
-    -- seele-user
-    ("auth" : _) -> pure (WPRProxyDest $ ProxyDest "127.0.0.1" 8082)
     -- seele-monolith
+    ("auth" : _) -> pure (WPRProxyDest $ ProxyDest "127.0.0.1" 8083)
     ("g": _)     -> pure (WPRProxyDest $ ProxyDest "127.0.0.1" 8083)
     ("giql" : _) -> pure (WPRProxyDest $ ProxyDest "127.0.0.1" 8083)
     -- 404 NOT FOUND
